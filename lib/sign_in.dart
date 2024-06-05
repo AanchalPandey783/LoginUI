@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:u_ui_design/home_screen.dart';
+import 'package:u_ui_design/sign_up.dart';
 
 class SignInWindow extends StatelessWidget {
-   const SignInWindow({super.key});
+  const SignInWindow({super.key});
 
-  @override
+
+     @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: SignInScreen(),
@@ -22,16 +24,30 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
 
+  final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
+    _fullNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
+
+  String? _validateFullName(String? value) {
+    final RegExp fullNameRegExp = RegExp(r'^[a-zA-Z]+(?: [a-zA-Z]+)*$');
+    if (value == null || value.isEmpty) {
+      return 'Please enter your full name';
+    }
+    if (!fullNameRegExp.hasMatch(value)) {
+      return 'Please enter a valid full name';
+    }
+    return null;
+  }
+
   String? _validateEmail(String?value){
     final RegExp emailRegExp = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9._]+\.[a-zA-z]{2,}$');
     if (value==null||value.isEmpty){
@@ -42,13 +58,14 @@ class _SignInScreenState extends State<SignInScreen> {
     }
     return null;
   }
-  String? _validatePassword(String ?value){
-    final RegExp passwordRegExp= RegExp(r'^[\d{6]$');
-    if(value==null||value.isEmpty){
-      return 'Please enter password';
+
+  String? _validatePassword(String? value) {
+    final RegExp passwordRegExp = RegExp(r'^.{6,}$');
+    if (value == null || value.isEmpty) {
+      return 'Please enter a password';
     }
-    if(!passwordRegExp.hasMatch(value)){
-      return 'Please enter 6 digit password!';
+    if (!passwordRegExp.hasMatch(value)) {
+      return 'Password must be at least 6 characters long!';
     }
     return null;
   }
@@ -91,7 +108,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.zero)),
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>  const SignUpScreen()));
                         },
                         child: const Text(
                           'SignUp',
@@ -107,7 +124,24 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
 
                     const SizedBox(
-                      height: 20,
+                      height: 30,
+                    ),
+                    SizedBox(
+                      height: 50,
+                      width: 300,
+                      child: TextFormField(
+                        controller: _fullNameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Full name',
+                          hintText: 'Enter full Name',
+                          fillColor: Colors.white70,
+                          filled: true,
+                        ),
+                        validator: _validateFullName,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
                     ),
                     SizedBox(
                       height: 30,
@@ -125,7 +159,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 30,
                     ),
                     SizedBox(
                       height: 30,
@@ -163,10 +197,12 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: TextButton(
                             onPressed: () {
                               if(_formKey.currentState!.validate()){
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login Successful!')),);
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));}
-                              else{
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error in Values!')),);
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Login Successful!')),);
+                                //Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen(email: _emailController.text, name: _fullNameController.text)));     
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen(name: _fullNameController.text, email: _emailController.text)));
+
+                                 }else{
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error in Values!')),);
                                     }
 
                             },
@@ -196,7 +232,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       height:50, width:350,
                       child: OutlinedButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> HomeScreen(name: _fullNameController.text, email: _emailController.text)));
                         },
                         style: OutlinedButton.styleFrom(
                             shape: const RoundedRectangleBorder(

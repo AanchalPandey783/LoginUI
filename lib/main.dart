@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:u_ui_design/sign_in.dart';
 import 'package:u_ui_design/welcome_screen.dart';
-
 void main() {
   runApp(MyApp());
 }
@@ -13,13 +13,13 @@ class MyApp extends StatelessWidget {
       home:OrientationBuilder(
         builder:(context,orientation){
           if (orientation==Orientation.portrait){
-            return AspectRatio(
+            return  const AspectRatio(
               aspectRatio: 9/16 ,
               child: NewUi(),
             );
           }
           else{
-           return AspectRatio(
+           return const AspectRatio(
               aspectRatio: 16/9 ,
               child: NewUi(),
             );
@@ -29,9 +29,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-     //  height: screenSize.height*0.8,
-     //  width: screenSize.width*0.8,
 
 
 
